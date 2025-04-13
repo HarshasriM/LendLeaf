@@ -32,7 +32,7 @@ const requestSchema = new mongoose.Schema({
   },
   requestDate: {
     type: Date,
-    default: Date.now
+    default: Date.now()
   },
   borrowDate: Date,
   deadlineDate: Date,
