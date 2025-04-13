@@ -1,7 +1,7 @@
 import Book from "../models/Book.model.js";
 import Request from "../models/Request.model.js";
 import request from "../models/Request.model.js";
-import generatedReport from "../utils/rentchargeUtil.js"
+import generateRentReport from "../utils/rentchargeUtil.js"
 
 class RequestController{
     async createRequest(req,res){
