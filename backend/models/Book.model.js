@@ -19,12 +19,12 @@ const bookSchema = new mongoose.Schema({
   },
   imageBase64: {
     type: [String], // array of base64 image strings
-    validate: {
-      validator: function (arr) {
-        return arr.length >= 3;
-      },
-      message: 'At least 3 images are required.'
-    },
+    // validate: {
+    //   validator: function (arr) {
+    //     return arr.length >= 3;
+    //   },
+    //   message: 'At least 3 images are required.'
+    // },
     required: true
   },
   reviews:[

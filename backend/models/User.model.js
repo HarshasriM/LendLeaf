@@ -70,6 +70,16 @@ const userSchema = new mongoose.Schema({
     ref: 'Book',
     default:[]
   }],
+  averageRating:{
+    type:Number,
+    default:0,
+  },
+  reviews:[
+      {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Review",
+      }
+  ],
 },
 {timestamps:true}
 );

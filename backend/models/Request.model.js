@@ -6,23 +6,40 @@ const requestSchema = new mongoose.Schema({
     ref: 'Book',
     required: true
   },
-  requester: {
+  bookPrice:{
+    type:Number,
+    default:0,
+    required:true,
+  },
+  borrower: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
-  owner: {
+  lender: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
   status: {
     type: String,
-    enum: ['pending', 'approved', 'rejected', 'returned','borrowed'],
+    enum: ['pending', 'accepted', 'rejected', 'borrowed', 'returned', 'cancelled'],
     default: 'pending'
   },
-  message: {
-    type:String,
+  requestedDays: {
+    type: Number,
+    required: true
+  },
+  requestDate: {
+    type: Date,
+    default: Date.now
+  },
+  borrowDate: Date,
+  deadlineDate: Date,
+  actualReturnDate: Date,
+  report: {
+    type: Object, // report will contain calculated cost etc
+    default: {}
   },
   rentedDays: {
     type: Number,

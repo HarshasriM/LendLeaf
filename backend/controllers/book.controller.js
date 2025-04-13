@@ -11,13 +11,13 @@ class BookController{
 
         const owner = req.user._id;
 
-        // Check if at least 3 images uploaded
-        if (!req.files || req.files.length < 3) {
-        return res.status(400).json({
-            success: false,
-            message: "Please upload at least 3 images.",
-        });
-        }
+        // // Check if at least 3 images uploaded
+        // if (!req.files || req.files.length < 3) {
+        // return res.status(400).json({
+        //     success: false,
+        //     message: "Please upload at least 3 images.",
+        // });
+        // }
 
         // Convert uploaded buffers to base64
         const imageBase64 = req.files.map((file) =>

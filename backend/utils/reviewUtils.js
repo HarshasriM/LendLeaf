@@ -16,5 +16,15 @@ class ReviewUtils{
         .sort({createdAt:-1})
         .populate("borrower","name email")
     }
+    async calculateAverageRating(Model,id,reviewField = 'reviews'){
+        const document = await Model.findById(id).populate(reviewField);
+        if (!document) throw new Error("Document not found");
+
+        const totalRating = document[reviewField].reduce((sum, review) => sum + review.rating, 0);
+        const average = document[reviewField].length ? totalRating / document[reviewField].length : 0;
+
+        document.averageRating = average.toFixed(1);
+        await document.save();
+    }
 }
 export default new ReviewUtils();

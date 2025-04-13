@@ -8,11 +8,13 @@ const reviewSchema = new mongoose.Schema({
   },
   lender: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    default:null
   }, 
   book: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Book',
+    default:null
   }, 
   rating: {
     type: Number,
