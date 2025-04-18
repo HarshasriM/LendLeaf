@@ -15,8 +15,8 @@ router.get("/allbookreviews/:bookId",isAuthenticated, bookReviewController.getAl
 router.post("/checklenderreviewuser/:lenderId",isAuthenticated, lenderReviewController.checkUserexist);
 router.post("/addlenderreview/:lenderId",isAuthenticated, lenderReviewController.addLenderReview);
 router.delete("/deletelenderreview/:reviewId",isAuthenticated, lenderReviewController.deleteLenderReview);
-router.get("/gettoplenderreviews/:id",isAuthenticated, lenderReviewController.getTopTenReviews);
-router.get("/alllenderreviews/:id",isAuthenticated, lenderReviewController.getAllReviews);
+router.get("/gettoplenderreviews/:lenderId",isAuthenticated, lenderReviewController.getTopTenReviews);
+router.get("/alllenderreviews/:lenderId",isAuthenticated, lenderReviewController.getAllReviews);
 
 
 export default router;

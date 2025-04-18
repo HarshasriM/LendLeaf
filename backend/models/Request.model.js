@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const requestSchema = new mongoose.Schema({
   book: {
@@ -23,8 +23,8 @@ const requestSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'accepted', 'rejected', 'borrowed', 'returned', 'cancelled'],
-    default: 'pending'
+    enum: ['pending','accepted', 'rejected', 'borrowed', 'returned', 'cancelled'],
+    default:'pending'
   },
   requestedDays: {
     type: Number,
@@ -40,10 +40,6 @@ const requestSchema = new mongoose.Schema({
   report: {
     type: Object, // report will contain calculated cost etc
     default: {}
-  },
-  rentedDays: {
-    type: Number,
-    required: true
   },
   
 },{timestamps:true});

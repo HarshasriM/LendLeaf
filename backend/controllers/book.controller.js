@@ -1,5 +1,6 @@
 import {convertToBase64,convertMultipleToBase64} from "../utils/imageUtils.js";
 import Book from "../models/Book.model.js";
+import User from "../models/User.model.js";
 import axios from "axios";
 
 // Create Book Controller
@@ -49,7 +50,7 @@ class BookController{
         });
 
         await book.save();
-
+        await User.findByIdAndUpdate(owner, { isLender: true });
         res.status(201).json({
         success: true,
         message: "Book created successfully",

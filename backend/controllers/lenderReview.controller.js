@@ -72,7 +72,7 @@ class LenderReviewController{
     };
     async getAllReviews(req,res){
        try{
-            const lenderId = req.params;
+            const {lenderId} = req.params;
             const reviews = await Review.find({
                 lender:lenderId,
             }).populate("borrower","email").sort({ createdAt: -1 });
@@ -89,7 +89,7 @@ class LenderReviewController{
     };
     async getTopTenReviews(req,res){
         try{
-            const lenderId = req.params;
+            const {lenderId} = req.params;
             const userId = req.user._id;
 
             const userReview = await Review.find({

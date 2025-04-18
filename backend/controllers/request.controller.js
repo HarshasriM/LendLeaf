@@ -6,7 +6,7 @@ import generateRentReport from "../utils/rentchargeUtil.js"
 class RequestController{
     async createRequest(req,res){
         try {
-            const bookId = req.params;
+            const {bookId} = req.params;
             const { requestedDays } = req.body;
             const borrowerId = req.user._id; // from auth middleware
         
@@ -23,65 +23,69 @@ class RequestController{
               book: bookId,
               borrower: borrowerId,
               lender: lenderId,
+              bookPrice:book.price,
               requestedDays,
               requestDate,
             });
         
             const savedRequest = await newRequest.save();
-            res.status(201).json({ success:true, message:"Request created", data: savedRequest });
+            await User.findByIdAndUpdate(borrowerId, { isBorrower: true });
+            return res.status(201).json({ success:true, message:"Request created", data: savedRequest });
         
           } catch (error) {
             const statusCode = error.statusCode || 500
-            res.status(500).json({ success:false,data:{},message: "Error creating request", err: error.message });
+            return res.status(500).json({ success:false,data:{},message: "Error creating request", err: error.message });
           }
     };
     async updaterequestAccess(req,res){
         try{
             const {requestId} = req.params;
-            const status = req.body;
-            const request = Request.findById(requestId);
+            const {status} = req.body;
+            const request = await Request.findById(requestId);
             if (!request || request.status !== 'pending') {
                 return res.status(400).json({success:false,message: "Request not found or already handled" });
             }
             request.status = status;
             await request.save();
         
-            res.status(200).json({success:true, message: `Request ${status}`, data:request });
+            return res.status(200).json({success:true, message: `Request ${status}`, data:request });
         
             } catch (error) {
                 const statusCode = error.statusCode || 500
-                res.status(statusCode).json({success:false,data:{}, message: "Failed to update request status", err: error.message });
+                return res.status(statusCode).json({success:false,data:{}, message: "Failed to update request status", err: error.message });
             }      
     };
     async markAsBorrowed(req,res){
         try{
             const {requestId} = req.params;
-            const request = Request.findById(requestId).populate('book');
+            const request = await Request.findById(requestId).populate('book');
             if(!request || request.status!=="accepted"){
                return  res.status(400).json({success:false,message:"Invali status update"})
             }
             request.status="borrowed"
             request.borrowDate = Date.now();
-            const deadlineDate = Date.now();
+            const deadlineDate = new Date();
             deadlineDate.setDate(deadlineDate.getDate() + request.requestedDays);
+            request.deadlineDate = deadlineDate;
             await request.save();
             request.book.isAvailable=false;
             await request.book.save();
             return  res.status(200).json({ success:true,message: "Book marked as borrowed", data:request });
         }
         catch(error){
-            const statusCode = error.statusCode;
+            const statusCode = error.statusCode || 500;
             res.status(statusCode).json({
                 success:false,
                 data:{},
-                message:"Book status is not updated as borrowed "
+                message:"Book status is not updated as borrowed ",
+                err:error.message
             })
         }
     };
     async markAsReturned(req,res){
        try{
             const {requestId} = req.params;
-            const request = Request.findById(requestId).populate('book');
+            const request = await Request.findById(requestId).populate('book');
             if (!request || request.status !== 'borrowed') {
                 return res.status(400).json({ message: "Invalid or not borrowed" });
             }
@@ -96,14 +100,15 @@ class RequestController{
             request.book.isAvailable = true;
             await request.book.save();
         
-            res.status(200).json({success:false, message: "Book returned successfully", data:request, report:report });
+            res.status(200).json({success:true, message: "Book returned successfully", data:request, report:report });
        }
        catch(error){
             const statusCode = error.statusCode || 500
             return res.status(statusCode).json({
                 success:false,
                 message:"Book status is not updated as borrowed ",
-                data:{}
+                data:{},
+                err:error.message
             })
        }
 
@@ -111,7 +116,7 @@ class RequestController{
     async cancelRequest(req,res){
        try{
             const {requestId} = req.params;
-            const Request = Request.findById(requestId).populate("book");
+            const request = await Request.findById(requestId).populate("book");
             if (!request || ['borrowed', 'returned'].includes(request.status)) {
                 return res.status(400).json({success:false, message: "Cannot cancel after borrowing" });
             }
@@ -126,7 +131,8 @@ class RequestController{
         return res.status(statusCode).json({
             success:false,
             message:"Cancelling Book request is failed",
-            data:{}
+            data:{},
+            err:error.message
         })
        }
     }

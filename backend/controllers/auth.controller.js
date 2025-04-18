@@ -56,11 +56,11 @@ class AuthController{
       const { email, otp } = req.body;
       const user = await User.findOne({ email });
       const existingOtp = await Otp.findOne({ email, otp });
-  
+      
       if (!existingOtp) {
         return res.status(400).json({ success: false, message: "expired OTP" });
       }
-      if (existingOtp !== otp) {
+      if (existingOtp.otp !== otp) {
         return res.status(400).json({success:false, message: "Invalid OTP" });
       }
       // Update user as verified

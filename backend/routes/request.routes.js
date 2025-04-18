@@ -3,12 +3,12 @@ import express from "express";
 import isAuthenticated from "../middlewares/authMiddleware.js"
 const router = express.Router()
 
-router.post("/create",isAuthenticated,requestController.createRequest);
-router.patch("/updaterequest/:reviewId",isAuthenticated,requestController.updaterequestAccess);
-router.patch("/borrow/:reviewId",isAuthenticated,requestController.markAsBorrowed);
-router.patch("/return/:reviewId",isAuthenticated,requestController.markAsReturned);
-router.patch("/cancel/:reviewId",isAuthenticated,requestController.cancelRequest);
+router.post("/create/:bookId",isAuthenticated,requestController.createRequest);
+router.patch("/updaterequest/:requestId",isAuthenticated,requestController.updaterequestAccess);
+router.patch("/borrow/:requestId",isAuthenticated,requestController.markAsBorrowed);
+router.patch("/return/:requestId",isAuthenticated,requestController.markAsReturned);
+router.patch("/cancel/:requestId",isAuthenticated,requestController.cancelRequest);
 router.get("/lender",isAuthenticated,requestController.getRequestsToLender);
-router.get("/borrow",isAuthenticated,requestController.getRequestsToLender);
+router.get("/borrower",isAuthenticated,requestController.getRequestsByBorrower);
 
 export default router;
