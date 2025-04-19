@@ -115,10 +115,9 @@ class BookController{
     async getbookbyId(req,res){
         try {
             const { id } = req.params;
-            // const book = await Book.findById(id)
-            //   .populate('owner', 'name email')  // populate owner details if needed
-            //   .populate('reviews');             // populate review details if implemented
             const book = await Book.findById(id)
+              .populate('owner')  // populate owner details if needed
+              .populate('reviews');             // populate review details if implemented
         
             if (!book) {
               return res.status(404).json({success: false, data:{},message: "Book not found" });
@@ -126,7 +125,7 @@ class BookController{
             res.status(200).json({ success: true, data: book ,message:"Book is successfully retrieved"});
           } catch (error) {
             const statusCode = error.statusCode | 500
-            res.status(500).json({ success: false,data:{}, message: "Not retrieved", err: err.message });
+            res.status(500).json({ success: false,data:{}, message: "Not retrieved", err: error.message });
           }
     };
     //delete book by id

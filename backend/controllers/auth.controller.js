@@ -51,9 +51,29 @@ class AuthController{
                   });
         }
     };  
+    async signOut(req,res){
+      try {
+        res.cookie('token', '', {
+          httpOnly: true,
+          expires: new Date(0), // Expire immediately
+        });
+    
+        return res.status(200).json({
+          success: true,
+          message: "User logged out successfully"
+        });
+      } catch (err) {
+        console.error("Logout Error:", err);
+        return res.status(500).json({
+          success: false,
+          message: "Internal server error"
+        });
+      }
+    };
     async verifyOtp (req, res){
     try {
-      const { email, otp } = req.body;
+      const {email} = req.body;
+      const { otp } = req.body;
       const user = await User.findOne({ email });
       const existingOtp = await Otp.findOne({ email, otp });
       
