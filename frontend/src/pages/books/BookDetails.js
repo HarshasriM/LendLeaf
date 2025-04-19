@@ -22,7 +22,7 @@ function BookDetails() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
             {booksData.map((book) => (
-              <Link to={`/book/${book._id}`}>
+              <Link to={`/book/${book._id}`} key={book._id}>
                 <div key={book._id} className="w-fit bg-background rounded-2xl shadow-primary hover:shadow-lg shadow-primary transition-shadow duration-300 p-4">
                 {/* Book image or placeholder */}
                 <div className="w-60 h-48 bg-gray-200 rounded-md mb-4 flex items-center justify-center">

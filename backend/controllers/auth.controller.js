@@ -89,10 +89,11 @@ class AuthController{
       // Delete OTP after verification
       await Otp.deleteMany({ email });
       const token = user.genJWT();
-      
       res.cookie("token", token, {
         httpOnly: true,
         maxAge: 7 * 24 * 60 * 60 * 1000,
+        sameSite: 'None',
+        secure: "production",
       });
 
       return res.status(200).json({ success:true ,data:{user,token}, message: "Email verified successfully",err:{} });
@@ -157,7 +158,7 @@ class AuthController{
 
 
             // Check if verified
-            console.log(user.email)
+            // console.log(user.email)
             if (!user.isVerified) {
                 return res.status(403).json({success:false,message: "Please verify your email first" });
             }

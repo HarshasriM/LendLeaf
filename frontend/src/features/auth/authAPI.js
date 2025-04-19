@@ -4,7 +4,6 @@ import axios from '../../services/axios.js';
 
 export const loginUserAPI = async (userData) => {
   const response = await axios.post('/api/auth/signin', userData);
-  console.log(response.data)
   return response.data;
   
 };

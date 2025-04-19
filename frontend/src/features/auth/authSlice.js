@@ -44,10 +44,10 @@ export const verifyUserOtp = createAsyncThunk("auth/verifyotp",async (formData,t
 })
 
 const initialState = {
-  user: null,
   token: null,
   isLoading: false,
-  isAuthenticated: false,
+  user: JSON.parse(localStorage.getItem("user")) || null,
+  isAuthenticated: !!localStorage.getItem("user"),
 };
 
 const authSlice = createSlice({
