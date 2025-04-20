@@ -1,15 +1,39 @@
 import Book from "../models/Book.model.js";
 import Request from "../models/Request.model.js";
-import request from "../models/Request.model.js";
+import User from "../models/User.model.js"
 import generateRentReport from "../utils/rentchargeUtil.js"
 
 class RequestController{
+    async checkUserRequest(req,res){
+      try{
+        const borrowerId = req.user._id;
+        const {bookId} = req.params;
+        if(!borrowerId || !bookId ){
+          return res.status(400).json({success:false,message:"BorrowerId or bookId doesn't exists"})
+        }
+        const existingRequest = await Request.findOne({borrower : borrowerId , book:bookId})
+        if(existingRequest){
+          return res.status(200).json({success:true ,message:"You have already requested this book"})
+        }
+        return res.status(200).json({success:false,message:"You didn't request for this book "})
+      }
+      catch(error){
+        const statusCode = error.statusCode || 500;
+            res.status(statusCode).json({
+                success:false,
+                data:{},
+                message:"something went wrong",
+                err:error.message
+        })
+      }
+     
+    }
     async createRequest(req,res){
         try {
             const {bookId} = req.params;
             const { requestedDays } = req.body;
             const borrowerId = req.user._id; // from auth middleware
-        
+            //console.log(borrowerId)
             const book = await Book.findById(bookId);
             if (!book || !book.isAvailable) {
               return res.status(404).json({success:false,data:{}, message: "Book not available" });

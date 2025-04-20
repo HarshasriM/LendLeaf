@@ -1,17 +1,38 @@
 import Book from "../models/Book.model.js";
 import Review from "../models/Review.model.js";
 import reviewUtil from "../utils/reviewUtils.js";
+import mongoose from "mongoose";
 
 class BookReviewController{
     
     async checkUserexist(req,res){
-        const borrowerId = req.user._id;
-        const {bookId} = req.params
-        const existingReview = await Review.findOne({ borrower: borrowerId, book: bookId });
-        if (existingReview) {
-            return res.status(200).json({ success: true, message: "You have already reviewed this book." });
+        try{
+            const borrowerId = req.user._id;
+            const {bookId} = req.params
+            if (!borrowerId || !bookId) {
+                return res.status(400).json({ success:false,message: 'Borrower or book ID is missing' });
+              }
+              
+              // Optional: check if ObjectId is valid if you're using Mongoose
+            if (!mongoose.Types.ObjectId.isValid(borrowerId) || !mongoose.Types.ObjectId.isValid(bookId)) {
+                return res.status(400).json({ message: 'Invalid ID format' });
+            }
+            const existingReview = await Review.findOne({ borrower: borrowerId, book: bookId });
+            if (existingReview) {
+                return res.status(200).json({ success: true, message: "You have already reviewed this book." });
+            }
+            return res.status(200).json({success:false,message:"User didn't review this book"})
         }
-        return res.status(200).json({success:false,message:"User didn't review this book"})
+        catch(error){
+            const statusCode = error.statusCode || 500;
+            res.status(statusCode).json({
+                success:false,
+                data:{},
+                message:"something went wrong",
+                err:error.message
+            })
+        }
+       
     };
     async addBookReview(req,res) {
         try{

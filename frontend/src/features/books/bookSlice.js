@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import { getAllBooksAPI,fetchBookById } from "./bookAPI";
+import { getAllBooksAPI,fetchBookById , createBookAPI } from "./bookAPI";
 
 // Async Thunks
 export const getAllBooks = createAsyncThunk("books", async (thunkAPI) => {
@@ -25,11 +25,29 @@ export const getSingleBook = createAsyncThunk(
   }
 );
 
+
+export const createBook = createAsyncThunk(
+  "books/createBook",
+  async (formData, thunkAPI) => {
+    try {
+      const res = await createBookAPI(formData);
+      toast.success("Book created successfully!");
+      return res;
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to create book");
+      return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to create book");
+    }
+  }
+);
+
+
+
 const initialState = {
   allBooks : [],
   singleBook: null,
   isLoading: true,
   error: null,
+  success: null,
 };
 
 const bookSlice = createSlice({
@@ -63,6 +81,22 @@ const bookSlice = createSlice({
       .addCase(getSingleBook.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload.err;
+      })
+
+      //createing the book
+      .addCase(createBook.pending, (state) => {
+        state.isLoading = true;
+        state.success = null;
+        state.error = null;
+      })
+      .addCase(createBook.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.success = "Book created successfully!";
+        state.allBooks.unshift(action.payload.data); // optionally add new book to list
+      })
+      .addCase(createBook.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
       });
       
   },

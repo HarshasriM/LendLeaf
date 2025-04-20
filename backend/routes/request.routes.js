@@ -4,6 +4,7 @@ import isAuthenticated from "../middlewares/authMiddleware.js"
 const router = express.Router()
 
 router.post("/create/:bookId",isAuthenticated,requestController.createRequest);
+router.get("/checkrequestforbook/:bookId",isAuthenticated,requestController.checkUserRequest)
 router.patch("/updaterequest/:requestId",isAuthenticated,requestController.updaterequestAccess);
 router.patch("/borrow/:requestId",isAuthenticated,requestController.markAsBorrowed);
 router.patch("/return/:requestId",isAuthenticated,requestController.markAsReturned);

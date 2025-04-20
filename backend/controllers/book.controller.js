@@ -21,6 +21,7 @@ class BookController{
         // }
 
         // Convert uploaded buffers to base64
+        // console.log(req.files)
         const imageBase64 = req.files.map((file) =>
         convertToBase64(file)
         );

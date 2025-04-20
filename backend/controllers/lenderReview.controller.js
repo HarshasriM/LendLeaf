@@ -2,12 +2,21 @@ import Book from "../models/Book.model.js";
 import Review from "../models/Review.model.js";
 import User from "../models/User.model.js"
 import reviewUtil from "../utils/reviewUtils.js";
+import mongoose from "mongoose";
 
 class LenderReviewController{
     
     async checkUserexist(req,res){
         const borrowerId = req.user._id;
         const {lenderId} = req.params
+        if (!borrowerId || !lenderId) {
+            return res.status(400).json({ message: 'Borrower or Lender ID is missing' });
+          }
+          
+          // Optional: check if ObjectId is valid if you're using Mongoose
+        if (!mongoose.Types.ObjectId.isValid(borrowerId) || !mongoose.Types.ObjectId.isValid(lenderId)) {
+            return res.status(400).json({ message: 'Invalid ID format' });
+        }
         const existingReview = await Review.findOne({ borrower: borrowerId, lender: lenderId });
         if (existingReview) {
             return res.status(200).json({ success: true,data:existingReview, message: "You have already reviewed this lender." });

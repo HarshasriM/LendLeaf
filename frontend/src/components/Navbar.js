@@ -54,7 +54,7 @@ const Navbar = () => {
           ) : (
              <>
                  <li>
-                    <Link to="/" className="hover:text-xl transition-text duration-300"> Add a book</Link>
+                    <Link to="/book/create" className="hover:text-xl transition-text duration-300"> Add a book</Link>
                 </li>
                 <li className="relative">
                     <button

@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import BookDetails from './pages/books/BookDetails.js';
 import SingleBook from './pages/books/SingleBook.js';
+import CreateBook from './pages/books/CreateBook.js';
 function App() {
   return (
     <Router>
@@ -23,6 +24,7 @@ function App() {
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/books" element={<BookDetails />} />
         <Route path='/book/:id' element={<SingleBook/>} />
+        <Route path='/book/create' element={<CreateBook/>} />
       </Routes>
       
 
